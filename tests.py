@@ -1,7 +1,11 @@
 from unittest import TestCase
 
 from app import app
-from models import db, Cupcake, connect_db
+from models import (
+    db,
+    connect_db,
+    Cupcake
+)
 
 # Use test database and don't clutter tests with SQL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes_test'
@@ -11,6 +15,7 @@ app.config['SQLALCHEMY_ECHO'] = False
 app.config['TESTING'] = True
 
 connect_db(app)
+
 db.drop_all()
 db.create_all()
 
@@ -109,3 +114,29 @@ class CupcakeViewsTestCase(TestCase):
             })
 
             self.assertEqual(Cupcake.query.count(), 2)
+
+    def test_patch_cupcake(self):
+        with app.test_client() as client:
+            url = f"/api/cupcakes/{self.cupcake.id}"
+            resp = client.patch(
+                url,
+                json={
+                    "flavor": "test_name_changed",
+                    "rating": 8
+                })
+
+            self.assertEqual(resp.status_code, 200)
+
+            data = resp.json.copy()
+
+            self.assertIsInstance(data['cupcake']['id'], int)
+            del data['cupcake']['id']
+
+            self.assertEqual(data, {
+                "cupcake":{
+                    "flavor": "test_name_changed",
+                    "size": "TestSize",
+                    "rating": 8,
+                    "image": "http://test.com/cupcake.jpg"
+                }
+            })
