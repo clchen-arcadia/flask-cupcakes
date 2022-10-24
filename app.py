@@ -6,8 +6,6 @@ from flask import (
     render_template
 )
 
-from flask_debugtoolbar import DebugToolbarExtension
-
 from models import (
     db,
     connect_db,
@@ -26,5 +24,3 @@ app.config['SECRET_KEY'] = "DON'T EVER DO THIS IN PRACTICE!!"
 # If you don't want intercepted redirects uncomment this line:
 #
 # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-
-debug = DebugToolbarExtension(app)

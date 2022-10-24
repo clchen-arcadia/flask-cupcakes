@@ -6,6 +6,13 @@ db = SQLAlchemy()
 
 DEFAULT_CUPCAKE_IMG_URL = "https://tinyurl.com/demo-cupcake"
 
+def connect_db(app):
+    """Connect to database."""
+
+    app.app_context().push()
+    db.app = app
+    db.init_app(app)
+
 class Cupcake(db.Model):
     """Cupcake."""
 
