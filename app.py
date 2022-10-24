@@ -30,7 +30,8 @@ app.config['SECRET_KEY'] = "DON'T EVER DO THIS IN PRACTICE!!"
 
 @app.get("/api/cupcakes")
 def get_cupcakes_data():
-    """Get data about all cupcakes.
+    """
+    Get data about all cupcakes.
     Return JSON {cupcakes: [{id, flavor, size, rating, image}, ...]}
     """
 
@@ -42,7 +43,8 @@ def get_cupcakes_data():
 
 @app.get("/api/cupcakes/<int:cupcake_id>")
 def get_single_cupcake_data(cupcake_id):
-    """Get data about a single cupcake.
+    """
+    Get data about a single cupcake.
     Return JSON {cupcakes: {id, flavor, size, rating, image}}
     """
 
@@ -54,7 +56,8 @@ def get_single_cupcake_data(cupcake_id):
 
 @app.post("/api/cupcakes")
 def create_cupcake():
-    """Create cupcake from form data and return it.
+    """
+    Create cupcake from form data and return it.
     Returns JSON {'cupcake': {id, flavor, size, rating, image}}
     """
 
@@ -78,7 +81,8 @@ def create_cupcake():
 
 @app.patch("/api/cupcakes/<int:cupcake_id>")
 def update_cupcake(cupcake_id):
-    """Update cupcake which already exists in database.
+    """
+    Update cupcake which already exists in database.
     Returns JSON {'cupcake': {id, flavor, size, rating, image}}
     """
 
@@ -106,3 +110,18 @@ def update_cupcake(cupcake_id):
     serialized = cupcake.serialize()
 
     return jsonify(cupcake=serialized)
+
+@app.delete("/api/cupcakes/<int:cupcake_id>")
+def delete_cupcake(cupcake_id):
+    """
+    Delete cupcake in the database
+    Returns JSON like {"deleted": cupcake-id}
+    """
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    Cupcake.query.filter_by(id=cupcake_id).delete()
+
+    db.session.commit()
+
+    return jsonify(deleted=cupcake_id)
