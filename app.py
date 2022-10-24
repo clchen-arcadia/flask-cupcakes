@@ -101,9 +101,8 @@ def update_cupcake(cupcake_id):
     if image is not None:
         cupcake.image = image
 
-    db.session.add(cupcake)
     db.session.commit()
 
-    serialized = new_cupcake.serialize()
+    serialized = cupcake.serialize()
 
-    return (jsonify(cupcake=serialized), 201)
+    return jsonify(cupcake=serialized)
