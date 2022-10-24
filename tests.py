@@ -117,12 +117,28 @@ class CupcakeViewsTestCase(TestCase):
 
     def test_patch_cupcake(self):
         with app.test_client() as client:
-            url = f"/api/cupcakes/{self.cupcake.id}"
+
+            # Patch with invalid id number
+            url = f"/api/cupcakes/9999"
             resp = client.patch(
                 url,
                 json={
                     "flavor": "test_name_changed",
                     "rating": 8
+                }
+            )
+            self.assertEqual(resp.status_code, 404)
+
+            # Patch with valid id number
+            url = f"/api/cupcakes/{self.cupcake.id}"
+            resp = client.patch(
+                url,
+                json={
+                    "flavor": "test_name_changed",
+                    "rating": 8,
+
+                    "id": 9999,
+                    "foo": "bar"
                 })
 
             self.assertEqual(resp.status_code, 200)
@@ -137,22 +153,22 @@ class CupcakeViewsTestCase(TestCase):
                 }
             })
 
-    #TODO: Pessimistic test for invalid data, test for cupcake which does not exist.
-
     def test_delete_cupcake(self):
         with app.test_client() as client:
+
+            # Delete with invalid id number
+            url = f"/api/cupcakes/9999"
+            resp = client.delete(url)
+            self.assertEqual(resp.status_code, 404)
+
+            # Delete with valid id number
             url = f"/api/cupcakes/{self.cupcake.id}"
             resp = client.delete(url)
 
             self.assertEqual(resp.status_code, 200)
 
-            data = resp.json.copy()
-
-            self.assertEqual(data, {
+            self.assertEqual(resp.json, {
                 "deleted": self.cupcake.id
             })
 
-            # url = f"/api/cupcakes/{self.cupcake.id}"
-            # resp = client.get(url)
             self.assertEqual(Cupcake.query.count(), 0)
-            self.assertEqual(resp.status_code, 404)
