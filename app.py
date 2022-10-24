@@ -29,6 +29,9 @@ app.config['SECRET_KEY'] = "DON'T EVER DO THIS IN PRACTICE!!"
 # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 
+
+################ROUTES FOR API########################
+
 @app.get("/api/cupcakes")
 def get_cupcakes_data():
     """
@@ -116,3 +119,12 @@ def delete_cupcake(cupcake_id):
     db.session.commit()
 
     return jsonify(deleted=cupcake_id)
+
+
+#################ROUTES FOR FRONTEND####################
+
+@app.get('/')
+def display_front_page():
+    """Display list of data and form for submitting new data to API"""
+
+    return render_template("index.html")
