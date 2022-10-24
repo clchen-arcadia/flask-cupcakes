@@ -74,3 +74,36 @@ def create_cupcake():
     serialized = new_cupcake.serialize()
 
     return (jsonify(cupcake=serialized), 201)
+
+
+@app.patch("/api/cupcakes/<int:cupcake_id>")
+def update_cupcake(cupcake_id):
+    """Update cupcake which already exists in database.
+    Returns JSON {'cupcake': {id, flavor, size, rating, image}}
+    """
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    flavor = request.json.get("flavor")
+    size = request.json.get("size")
+    rating = request.json.get("rating")
+    image = request.json.get("image")
+
+    if flavor is not None:
+        cupcake.flavor = flavor
+
+    if size is not None:
+        cupcake.size = size
+
+    if rating is not None:
+        cupcake.rating = rating
+
+    if image is not None:
+        cupcake.image = image
+
+    db.session.add(cupcake)
+    db.session.commit()
+
+    serialized = new_cupcake.serialize()
+
+    return (jsonify(cupcake=serialized), 201)
