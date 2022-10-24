@@ -127,16 +127,32 @@ class CupcakeViewsTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
 
-            data = resp.json.copy()
-
-            self.assertIsInstance(data['cupcake']['id'], int)
-            del data['cupcake']['id']
-
-            self.assertEqual(data, {
-                "cupcake":{
+            self.assertEqual(resp.json, {
+                "cupcake": {
+                    "id": self.cupcake.id,
                     "flavor": "test_name_changed",
                     "size": "TestSize",
                     "rating": 8,
                     "image": "http://test.com/cupcake.jpg"
                 }
             })
+
+    #TODO: Pessimistic test for invalid data, test for cupcake which does not exist.
+
+    def test_delete_cupcake(self):
+        with app.test_client() as client:
+            url = f"/api/cupcakes/{self.cupcake.id}"
+            resp = client.delete(url)
+
+            self.assertEqual(resp.status_code, 200)
+
+            data = resp.json.copy()
+
+            self.assertEqual(data, {
+                "deleted": self.cupcake.id
+            })
+
+            # url = f"/api/cupcakes/{self.cupcake.id}"
+            # resp = client.get(url)
+            self.assertEqual(Cupcake.query.count(), 0)
+            self.assertEqual(resp.status_code, 404)

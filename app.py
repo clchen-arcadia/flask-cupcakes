@@ -11,7 +11,8 @@ from flask import (
 from models import (
     db,
     connect_db,
-    Cupcake
+    Cupcake,
+    DEFAULT_CUPCAKE_IMG_URL
 )
 
 app = Flask(__name__)
@@ -88,28 +89,18 @@ def update_cupcake(cupcake_id):
 
     cupcake = Cupcake.query.get_or_404(cupcake_id)
 
-    flavor = request.json.get("flavor")
-    size = request.json.get("size")
-    rating = request.json.get("rating")
-    image = request.json.get("image")
-
-    if flavor is not None:
-        cupcake.flavor = flavor
-
-    if size is not None:
-        cupcake.size = size
-
-    if rating is not None:
-        cupcake.rating = rating
-
-    if image is not None:
-        cupcake.image = image
+    cupcake.flavor = request.json.get("flavor", cupcake.flavor)
+    cupcake.size = request.json.get("size", cupcake.size)
+    cupcake.rating = request.json.get("rating", cupcake.rating)
+    cupcake.image = request.json.get(
+        "image", cupcake.image) or DEFAULT_CUPCAKE_IMG_URL
 
     db.session.commit()
 
     serialized = cupcake.serialize()
 
     return jsonify(cupcake=serialized)
+
 
 @app.delete("/api/cupcakes/<int:cupcake_id>")
 def delete_cupcake(cupcake_id):
