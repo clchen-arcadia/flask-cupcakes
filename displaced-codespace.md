@@ -23,3 +23,21 @@
     <button id="add-cupcake-button" type="submit">Add Cupcake</button>
 
   </form>
+
+
+
+  ------------------------
+
+
+
+  I like to use the flask.Response class:
+
+from flask import Response
+
+
+@app.route("/")
+def index():
+    return Response(
+        "The response body goes here",
+        status=400,
+    )
