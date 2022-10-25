@@ -1,5 +1,6 @@
 """Flask app for Cupcakes"""
 
+
 from flask import (
     Flask,
     redirect,
@@ -14,6 +15,8 @@ from models import (
     Cupcake,
     DEFAULT_CUPCAKE_IMG_URL
 )
+
+from forms import AddCupcakeForm
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes'
@@ -127,4 +130,33 @@ def delete_cupcake(cupcake_id):
 def display_front_page():
     """Display list of data and form for submitting new data to API"""
 
-    return render_template("index.html")
+    form = AddCupcakeForm()
+
+    return render_template("index.html", form=form)
+
+
+@app.route("/", methods=["GET", "POST"])
+def add_cupcake():
+    """Form for adding a cupcake to the database."""
+
+    form = AddCupcakeForm()
+
+    if form.validate_on_submit():
+        print("YOU GOT HERE------------------")
+        flavor = form.flavor.data
+        size = form.size.data
+        rating = form.rating.data
+        image = form.image.data
+
+        new_cupcake = Cupcake({flavor: flavor,
+        size: size,
+        rating: rating,
+        image: image,})
+
+        db.session.add(new_cupcake)
+        db.session.commit()
+        return redirect('/')
+
+    else:
+        return render_template(
+            "index.html", form=form)

@@ -1,9 +1,10 @@
 "use strict";
 
-const BASE_URL = 'http://127.0.0.1:5001';
+const BASE_URL = "http://127.0.0.1:5001";
 const $cupcakesSection = $("#cupcakes-section");
 const $cupcakesList = $("#cupcakes-list");
 const $cupcakesForm = $("#cupcakes-form");
+const $addCupcakeButton = $("#add-cupcake-button");
 
 /**
  * Function creates new cupcake, POSTS it to the API,
@@ -12,36 +13,33 @@ const $cupcakesForm = $("#cupcakes-form");
 
 //TODO:
 
-
-
 /**
  * Function queries the API and gets all cupcakes in the database,
  * and then returns it as a array of objects.
  */
-async function getCupcakes(){
+async function getCupcakes() {
   console.debug("getCupcakes() invoked");
   console.debug("url is", `${BASE_URL}/api/cupcakes`);
 
   // axios call
   const response = await axios({
     url: `${BASE_URL}/api/cupcakes`,
-    method: "GET"
+    method: "GET",
   });
 
   const cupcakes = response.data.cupcakes;
   return cupcakes;
 }
 
-
 /**
  * Function loads the page on start, get all the cupcakes from the API,
  * and then displays it on the page.
  */
-async function start(){
+async function start() {
   console.debug("start() invoked");
   const cupcakes = await getCupcakes();
   console.debug("cupcakes is", cupcakes);
-  for (let cupcake of cupcakes){
+  for (let cupcake of cupcakes) {
     putCupcakeOnPage(cupcake);
   }
 }
@@ -49,7 +47,7 @@ async function start(){
 /**
  * Function accepts one cupcake-data object, and put its on the list in the DOM.
  */
-function putCupcakeOnPage(cupcakeObj){
+function putCupcakeOnPage(cupcakeObj) {
   console.debug("putCupcakeOnPage() invoked");
   const $newListItem = $(`
   <li>
@@ -62,5 +60,12 @@ function putCupcakeOnPage(cupcakeObj){
   $cupcakesList.append($newListItem);
 }
 
+
+function onFormSubmit(evt) {
+  evt.preventDefault();
+}
+
+
+$addCupcakeButton.on("click", onFormSubmit)
 
 start();
