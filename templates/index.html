@@ -15,29 +15,20 @@
     </ol>
   </section>
 
-  <h2>Add a New Cupcake</h2>
-
-  <form method="POST" id="cupcakes-form">
-    {{ form.hidden_tag() }}
-
-    {% for field in form
-      if field.widget.input_type != 'hidden' %}
-
-      <p>
-        {{ field.label }}
-        {{ field }}
-
-        {% for error in field.errors %}
-          {{ error }}
-        {% endfor %}
-
-      </p>
-
-      {% endfor %}
-
-    <button id="add-cupcake-button" type="submit">Add Cupcake</button>
-
+  <h2>Add a New Cupcake!</h2>
+  <form id="cupcakes-form">
+    <label>Flavor</label>
+    <input id="submit-flavor" type="text">
+    <label>Size</label>
+    <input id="submit-size" type="text">
+    <label>Rating</label>
+    <input id="submit-rating" type="number">
+    <label>Image URL</label>
+    <input id="submit-image-url" type="url">
+    <button>Add Cupcake</button>
   </form>
+
+
 
 
   <!-- Library JS & our JS -->

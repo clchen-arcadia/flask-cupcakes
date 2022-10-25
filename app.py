@@ -33,7 +33,7 @@ app.config['SECRET_KEY'] = "DON'T EVER DO THIS IN PRACTICE!!"
 
 
 
-################ROUTES FOR API########################
+################ ROUTES FOR API ########################
 
 @app.get("/api/cupcakes")
 def get_cupcakes_data():
@@ -68,10 +68,12 @@ def create_cupcake():
     Returns JSON {'cupcake': {id, flavor, size, rating, image}}
     """
 
-    flavor = request.json["flavor"]
-    size = request.json["size"]
-    rating = request.json["rating"]
-    image = request.json["image"]
+    print("------_TEST_-------", request.json)
+
+    flavor = request.json.get("flavor")
+    size = request.json.get("size")
+    rating = request.json.get("rating")
+    image = request.json.get("image") or DEFAULT_CUPCAKE_IMG_URL
 
     new_cupcake = Cupcake(flavor=flavor,
                           size=size,
@@ -124,42 +126,41 @@ def delete_cupcake(cupcake_id):
     return jsonify(deleted=cupcake_id)
 
 
-#################ROUTES FOR FRONTEND####################
+################# ROUTES FOR FRONTEND ####################
 
-# @app.get('/')
-# def display_front_page():
-#     """Display list of data and form for submitting new data to API"""
+@app.get('/')
+def display_front_page():
+    """Display list of data and form for submitting new data to API"""
+
+    return render_template("index.html")
+
+# ROUTE FOR USING WTFORMS
+#
+# @app.route("/", methods=["GET", "POST"])
+# def add_cupcake():
+#     """Form for adding a cupcake to the database."""
 
 #     form = AddCupcakeForm()
 
-#     return render_template("index.html", form=form)
+#     if form.validate_on_submit():
+#         print("--------------YOU GOT HERE 1------------------")
+#         flavor = form.flavor.data
+#         size = form.size.data
+#         rating = form.rating.data
+#         image = form.image.data
 
+#         new_cupcake = Cupcake(
+#             flavor=flavor,
+#             size=size,
+#             rating=rating,
+#             image=image,
+#         )
 
-@app.route("/", methods=["GET", "POST"])
-def add_cupcake():
-    """Form for adding a cupcake to the database."""
+#         db.session.add(new_cupcake)
+#         db.session.commit()
+#         return redirect('/')
 
-    form = AddCupcakeForm()
-
-    if form.validate_on_submit():
-        print("--------------YOU GOT HERE 1------------------")
-        flavor = form.flavor.data
-        size = form.size.data
-        rating = form.rating.data
-        image = form.image.data
-
-        new_cupcake = Cupcake(
-            flavor=flavor,
-            size=size,
-            rating=rating,
-            image=image,
-        )
-
-        db.session.add(new_cupcake)
-        db.session.commit()
-        return redirect('/')
-
-    else:
-        print("--------------YOU GOT HERE 2------------------")
-        return render_template(
-            "index.html", form=form)
+#     else:
+#         print("--------------YOU GOT HERE 2------------------")
+#         return render_template(
+#             "index.html", form=form)

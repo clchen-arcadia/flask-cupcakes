@@ -10,8 +10,14 @@ const $addCupcakeButton = $("#add-cupcake-button");
  * Function creates new cupcake, POSTS it to the API,
  * and then puts it on the page.
  */
+async function postNewCupcake() {
+  console.debug("postNewCupcake() invoked");
 
-//TODO:
+  const response = await axios({
+    url: `${BASE_URL}/api/cupcakes`,
+    method: "POST"
+  })
+}
 
 /**
  * Function queries the API and gets all cupcakes in the database,
@@ -60,12 +66,34 @@ function putCupcakeOnPage(cupcakeObj) {
   $cupcakesList.append($newListItem);
 }
 
+async function handleSubmit() {
+  const flavor = $("#submit-flavor").val();
+  const size = $("#submit-size").val();
+  const rating = $("#submit-rating").val();
+  const image = $("#submit-imageUrl").val();
 
-// function onFormSubmit(evt) {
-//   evt.preventDefault();
-// }
+  const cupcakeObj = { flavor, size, rating, image };
+
+  const response = await axios({
+    url: `${BASE_URL}/api/cupcakes`,
+    method: "POST",
+    data: {
+      "flavor": flavor,
+      "size": size,
+      "rating": rating,
+      "image": image
+    }
+  });
+
+  putCupcakeOnPage(cupcakeObj);
+}
 
 
-// $addCupcakeButton.on("click", onFormSubmit)
+function onFormSubmit(evt) {
+  evt.preventDefault();
+  handleSubmit();
+}
+
+$cupcakesForm.on("submit", onFormSubmit)
 
 start();
