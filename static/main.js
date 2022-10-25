@@ -61,11 +61,11 @@ function putCupcakeOnPage(cupcakeObj) {
 }
 
 
-function onFormSubmit(evt) {
-  evt.preventDefault();
-}
+// function onFormSubmit(evt) {
+//   evt.preventDefault();
+// }
 
 
-$addCupcakeButton.on("click", onFormSubmit)
+// $addCupcakeButton.on("click", onFormSubmit)
 
 start();

@@ -126,13 +126,13 @@ def delete_cupcake(cupcake_id):
 
 #################ROUTES FOR FRONTEND####################
 
-@app.get('/')
-def display_front_page():
-    """Display list of data and form for submitting new data to API"""
+# @app.get('/')
+# def display_front_page():
+#     """Display list of data and form for submitting new data to API"""
 
-    form = AddCupcakeForm()
+#     form = AddCupcakeForm()
 
-    return render_template("index.html", form=form)
+#     return render_template("index.html", form=form)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -142,21 +142,24 @@ def add_cupcake():
     form = AddCupcakeForm()
 
     if form.validate_on_submit():
-        print("YOU GOT HERE------------------")
+        print("--------------YOU GOT HERE 1------------------")
         flavor = form.flavor.data
         size = form.size.data
         rating = form.rating.data
         image = form.image.data
 
-        new_cupcake = Cupcake({flavor: flavor,
-        size: size,
-        rating: rating,
-        image: image,})
+        new_cupcake = Cupcake(
+            flavor=flavor,
+            size=size,
+            rating=rating,
+            image=image,
+        )
 
         db.session.add(new_cupcake)
         db.session.commit()
         return redirect('/')
 
     else:
+        print("--------------YOU GOT HERE 2------------------")
         return render_template(
             "index.html", form=form)
