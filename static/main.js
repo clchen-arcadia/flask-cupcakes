@@ -57,7 +57,9 @@ function putCupcakeOnPage(cupcakeObj) {
   console.debug("putCupcakeOnPage() invoked");
   const $newListItem = $(`
   <li>
-    <img src="${cupcakeObj.image}">
+    <img class="Cupcake-img"
+      src="${cupcakeObj.image}"
+      alt="(no image provided)">
     <p>
     ${cupcakeObj.flavor} flavor available in ${cupcakeObj.size} with a rating of ${cupcakeObj.rating}
     </p>
